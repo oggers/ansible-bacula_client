@@ -1,0 +1,4 @@
+{{ ansible_managed }}
+{%- import '_macros.j2' as macros with context -%}
+
+{{ macros.config(item.config|default([])) }}

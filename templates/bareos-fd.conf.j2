@@ -1,0 +1,28 @@
+# {{ ansible_managed }}
+
+FileDaemon {
+  Name = {{ ansible_hostname }}-fd
+  Maximum concurrent Jobs = {{ bareos_client_max_concurrent_jobs }}
+  compatible = {{'yes' if bareos_client_compatible else 'no'}}
+  {% if bareos_client_filedaemon_extra is defined %}
+  {{ bareos_client_filedaemon_extra }}
+  {% endif %}
+}
+
+{% for director in bareos_client_directors %}
+Director {
+  Name: {{ director.name }}
+  Password: "{{ director.password }}"
+  {% if director.monitor is defined %}
+  Monitor: {{'yes' if director.monitor else 'no'}}
+  {% endif %}
+}
+{% endfor %}
+
+
+Messages {
+  Name = Standard
+  {% if bareos_client_messages_director is defined %}
+  director = {{ bareos_client_messages_director }} = all, !skipped, !restored
+  {% endif %}
+}

@@ -1,0 +1,35 @@
+---
+# tasks/main.yml
+
+- name: Test distribution
+  assert:
+    that: >
+      ansible_os_family == "Debian"
+  tags:
+  - bareos_client_assert
+
+- name: Add bareos APT repository key
+  # bareos repository uses a weak key, hope it will be upgraded soon
+  apt_key: url="{{ bareos_repository_url }}/Release.key" state=present
+
+- name: Add bareos APT repository
+  apt_repository: repo="deb {{ bareos_repository_url }} /" state=present
+
+- name: Install bareos client packages
+  apt: name={{ item }} state=present update_cache=yes cache_valid_time=3600 allow_unauthenticated=yes
+  with_items: "{{ bareos_client_packages }}"
+
+- name: Config bareos client
+  template:
+    src: bareos-fd.conf.j2
+    dest: "{{ bareos_client_configs_dir }}/bareos-fd.conf"
+  notify:
+    - bareos-filedaemon restart
+
+#- name: Config bareos client > templates
+#  template:
+#    src:  "{{ item.template|default(bareos_configs_template|ternary(bareos_configs_template, 'configs/empty.j2')) }}"
+#    dest: "{{ bareos_client_configs_dir }}/{{ item.file }}"
+#  with_items: "{{ bareos_client_configs }}"
+#  notify:
+#    - bareos-filedaemon restart

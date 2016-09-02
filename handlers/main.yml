@@ -1,0 +1,4 @@
+---
+# handlers/main.yml
+- name: bareos-filedaemon restart
+  service: name=bareos-fd state=restarted

@@ -1,0 +1,9 @@
+---
+# defaults/main.yml
+
+bareos_repository_url: http://download.bareos.org/bareos/release/latest/xUbuntu_14.04/
+bareos_client_packages:
+  - bareos-filedaemon
+bareos_client_configs_dir: /etc/bareos
+bareos_client_max_concurrent_jobs: 20
+bareos_client_compatible: no
