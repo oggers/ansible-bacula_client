@@ -11,10 +11,10 @@ FileDaemon {
 
 {% for director in bareos_client_directors %}
 Director {
-  Name: {{ director.name }}
-  Password: "{{ director.password }}"
+  Name = {{ director.name }}
+  Password = "{{ director.password }}"
   {% if director.monitor is defined %}
-  Monitor: {{'yes' if director.monitor else 'no'}}
+  Monitor = {{'yes' if director.monitor else 'no'}}
   {% endif %}
 }
 {% endfor %}
